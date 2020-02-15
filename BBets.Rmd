@@ -1,7 +1,7 @@
 ---
 title: "BBets Project"
-author: "Dr. J"
-date: "1/31/2020"
+author: "Jaime Duran"
+date: "2/14/2020"
 output: html_document
 ---
 
@@ -14,22 +14,27 @@ knitr::opts_chunk$set(echo = TRUE)
 The question is how much money is won/lost on a bet that at least two people have the same b'day in a class of 35.  Instructor wagers 2:1 
 
 Instuctor has done this 15 times,  
-1.what is his expected win/loss amount,  
+1. what is his expected win/loss amount,  
 2. how much would the instructor have to wager to make the bet fair 
 3. how many students would have to be in the class for a 2:1 bet to be fair?   
  
  
 ```{r}
 days = 1:365
+students = 29
+classes = 15
+runs = students*classes
+payout = 2
 
 saveArray=vector('numeric')
+
 for(k in 1:1000){
   bank = 0
-  for(i in 1:525){
-    sampleClass = sample(days, 25, replace = TRUE)
+  for(i in 1:runs){
+    sampleClass = sample(days, students, replace = TRUE)
 
     repeats = length(unique(sampleClass))
-    if (repeats == 35) bank = bank - 2
+    if (repeats == students) bank = bank - payout
     else bank = bank + 1
   }
 saveArray[k]= bank
@@ -43,11 +48,19 @@ histogram of bank amounts.
 hist(saveArray)
 ```
 
-Answer questions #1
+Answer question #1
+
+1. The bank is expected to lose 33 times (bank -33), while the professor would win 28 times, because the value for 'repeats' is (repeats 28L). 
 
 ```{r}
 print('average amt:')
 print(mean(saveArray))
 ```
 
-  
+Answer question # 2
+
+2. To make the wager fair, the professor should wager between 2 to 4 dollars. For the sake of consistency, I ran the simulation where payout is 2 dollars.
+
+Answer question # 3
+
+3. At 35 students, the 2:1 payout ratio was averaging 231.693 on the histogram. The class size that got the best results was 29 students. At a class size of 28 students, the 2 to 1 wager averaged out at -17.016, at 29 students that same payout ratio brought the average size to 17.451. 
